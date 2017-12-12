@@ -1,10 +1,10 @@
 name:                passrhyme
 version:             0.1.0.0
-github:              githubuser/passrhyme
+github:              mherreshoff/passrhyme
 license:             BSD3
-author:              Author name here
-maintainer:          example@example.com
-copyright:           2017 Author name here
+author:              Marcello Herreshoff
+maintainer:          marcello.herreshoff@gmail.com
+copyright:           2017 Marcello Herreshoff
 
 extra-source-files:
 - README.md
