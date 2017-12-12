@@ -1,11 +1,38 @@
 module Main where
 
-import System.Random
-import Lib
+import Data.Bits (xor)
+import Data.ByteString (unpack)
 import Data.List (intercalate)
+import Lib
+import OpenSSL.Random
+import System.Entropy
+import System.Random
 import qualified Data.Set as Set
 
 
+----- Randomness utils:
+
+-- A paranoid way of generating random bits (we use the 'entropy' module and the 'HsOpenSSL' module and xor the results
+-- together.)
+paranoidRandomBytes :: Int -> IO RandomBytes
+paranoidRandomBytes n = do
+  e1 <- getEntropy n
+  e2 <- randBytes n
+  return $ RandomBytes $ map fromIntegral $ zipWith xor (unpack e1) (unpack e2)
+
+
+-- An interface to expose some random bytes we've gotten from the system as a RandomGen object.
+newtype RandomBytes = RandomBytes [Int]
+
+kMaxRandomBytes = 1000000
+
+instance RandomGen RandomBytes where
+  next (RandomBytes (x:xs)) = (x, RandomBytes xs)
+  next (RandomBytes []) = error "Random bytes exhausted.  Try a higher value of kMaxRandomBytes."
+  genRange _ = (0, 255)
+  split _ = error "Not implemented."
+
+----- Main program
 -- How to print a line (list of words) to the screen.
 showLine :: [Pronunciation] -> String
 showLine ps = intercalate " " (map word ps)
@@ -35,9 +62,7 @@ main = do
     -- Keep only the allowed words.  (CMU Dict has lots of weird proper names, etc.)
   -- putStrLn $ "numWords=" ++ show (length dictionary)
   lineMeter <- readStressPattern
-  g <- getStdGen
-    -- Get the system tandom numbers generator.
-    -- TODO: replace with something more secure since we're using this as a password generator?
+  g <- paranoidRandomBytes kMaxRandomBytes
   -- First we pick the rhyming words:
   let endWords = [p | p <- dictionary, stressPattern p `suffixOf` lineMeter]
     -- Words that match our meter if they're at the end of the line.

@@ -21,8 +21,11 @@ description:         Please see the README on Github at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
+- bytestring
 - containers
 - random
+- entropy
+- HsOpenSSL
 
 library:
   source-dirs: src
