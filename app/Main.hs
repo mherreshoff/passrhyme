@@ -34,7 +34,7 @@ readStressPattern = do
 main :: IO ()
 main = do 
   largeDictionary <- readDictionaryFile "cmudict-0.7b"
-  diceware <- (Set.fromList . lines) <$> readFile "diceware.txt"
+  diceware <- (Set.fromList . lines) <$> readFile "google-10000-english-no-swears.txt"
   let dictionary = filter ((`Set.member`diceware) . word) largeDictionary
   lineMeter <- readStressPattern
   -- putStrLn $ "d=" ++ show (length dictionary)

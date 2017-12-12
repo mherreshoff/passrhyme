@@ -86,7 +86,8 @@ isStressedVowel :: String -> Bool
 isStressedVowel s = c == '1' || c == '2' where c = last s
 
 rhymeStem :: Pronunciation -> [String]
-rhymeStem = last . tailsWhere isStressedVowel . phonemes
+rhymeStem p = if null t then phonemes p else last t where
+ t = tailsWhere isStressedVowel $ phonemes p
 
 rhymeSets :: [Pronunciation] -> [[Pronunciation]]
 rhymeSets = Map.elems . Map.fromListWith (++) . map (rhymeStem &&& (\x -> [x]))
