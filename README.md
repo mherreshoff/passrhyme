@@ -1,11 +1,18 @@
 # passrhyme
 
-Passrhyme is a rhyming password generator.  To use it, run
+Passrhyme is a rhyming password generator.  To build it in Mac OS X (with homebrew), run:
+```
+brew install openssl
+stack build --extra-include-dirs=/usr/local/opt/openssl/include --extra-lib-dirs=/usr/local/opt/openssl/lib
+```
+(Those flags are needed the first time you build it because we depend on HsOpenSSL as one of our sources of secure random bits, and those are the locations where homebrew puts the openssl library.)
+
+Then you an run it like this:
 
 ```
-stack build
 stack exec passrhyme-exe
 ```
+
 
 Note: you need to run the executable from the root directory of this repository so that passrhyme can find the CMU prounouncing
 dictionary and the 10k word list.
