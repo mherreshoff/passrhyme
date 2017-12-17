@@ -14,8 +14,11 @@ import qualified Data.Set as Set
 
 ----- Randomness utils:
 
--- A paranoid way of generating random bits (we use the 'entropy' module, the 'HsOpenSSL' module and the cryptonite module and
--- xor the results together.)
+-- The number of random bytes to be generated with paranoidRandomBytes.
+kMaxRandomBytes = 1000000
+
+-- A paranoid way of generating random bits (we use the 'entropy' module, the 'HsOpenSSL' module and
+-- the 'cryptonite' module and xor the results together.)
 paranoidRandomBytes :: Int -> IO RandomBytes
 paranoidRandomBytes n = do
   e1 <- unpack <$> SE.getEntropy n
@@ -24,22 +27,17 @@ paranoidRandomBytes n = do
   let xor3 a b c = xor (xor a b) c
   return $ RandomBytes $ zipWith3 xor3 e1 e2 e3
 
-
--- An interface to expose some random bytes we've gotten from the system as a RandomGen object.
+-- A wrapper which exposes some random bytes we've pre-generated as a RandomGen instance.
 newtype RandomBytes = RandomBytes [Word8]
-
-kMaxRandomBytes = 1000000
 
 instance RandomGen RandomBytes where
   next (RandomBytes (x:xs)) = (fromIntegral x, RandomBytes xs)
   next (RandomBytes []) = error "Random bytes exhausted.  Try a higher value of kMaxRandomBytes."
   genRange _ = (0, 255)
-  split _ = error "Not implemented."
+  split _ = error "Split is not implemented for RandomBytes."
+
 
 ----- Main program
--- How to print a line (list of words) to the screen.
-showLine :: [Pronunciation] -> String
-showLine ps = intercalate " " (map word ps)
 
 -- The default meter used by readStressPattern:
 iambicTetrameter = take 8 (cycle [False, True])
@@ -58,11 +56,16 @@ readStressPattern = do
   else if null line then return iambicTetrameter
   else return (map (=='-') line)
 
+-- Computes the log base 2 of an integer.
 bits :: (Integral n) => n -> Double
 bits = logBase 2.0 . fromIntegral
 
--- Given a dictionary, a line meter (stress pattern) and a random number generator, sample a passrhyme and print it (including
--- entropy information.)
+-- How to print a line (list of words) to the screen.
+showLine :: [Pronunciation] -> String
+showLine ps = intercalate " " (map word ps)
+
+-- Given a dictionary, a line meter (stress pattern) and a random number generator, sample some
+-- passrhymes and print them (including entropy information.)
 sampleAndPrintRhymes :: (RandomGen g) => [Pronunciation] -> [Bool] -> Int -> Int -> g -> IO g
 sampleAndPrintRhymes dictionary lineMeter k n g = do
   -- First we pick the rhyming words:
@@ -81,14 +84,13 @@ sampleAndPrintRhymes dictionary lineMeter k n g = do
   let line1 = constructLine dictionary line1Remainder line1Index ++ [w1]
   let line2 = constructLine dictionary line2Remainder line2Index ++ [w2]
 
-  -- Then, show them:
-  
+  -- Show the passrhyme:
   putStrLn $ ""
   putStrLn $ "Sample #" ++ show k ++ ":"
   putStrLn $ showLine line1
   putStrLn $ showLine line2
 
-  -- And print out some stats:
+  -- And print out some surprise stats:
   let rhymeBits = bits (length rhymePairs)
   let restBits = bits line1Possibilities + bits line2Possibilities
   let totalBits = rhymeBits + restBits
@@ -97,21 +99,29 @@ sampleAndPrintRhymes dictionary lineMeter k n g = do
   putStrLn $ "Given those rhyme words, the remainder had " ++ show restBits ++ " bits of surprise."
   putStrLn $ "For a total surprise of: " ++ show totalBits ++ " bits."
   putStrLn $ ""
+
+  -- And maybe do it again.
   g5 <- if (k >= n)
     then return g4
     else sampleAndPrintRhymes dictionary lineMeter (k+1) n g4
+
   return g5
 
 main :: IO ()
 main = do 
   largeDictionary <- readDictionaryFile "cmudict-0.7b"
+    -- Read the CMU Pronunciation Dictionary.
   allowedWords <- (Set.fromList . lines) <$> readFile "wordlist.txt"
+    -- Read the list of allowed words.
   let dictionary' = filter ((`Set.member`allowedWords) . word) largeDictionary
     -- Keep only the allowed words.  (CMU Dict has lots of weird proper names, etc.)
   let dictionary = filter ((>1).length.stressPattern) dictionary'
-    -- Throw out the one syllable words (since we're using a uniform sampler, we'd end up with many passphrases made
-    -- mostly of one syllable words otherwise, and those are harder to memorize.)
+    -- Throw out the one syllable words (since we're using a uniform sampler, we'd end up with many
+    -- passphrases made mostly of one syllable words otherwise, and those are harder to memorize.)
   lineMeter <- readStressPattern
+    -- Ask the user for a stress pattern.
   g <- paranoidRandomBytes kMaxRandomBytes
-  g2 <- sampleAndPrintRhymes dictionary lineMeter 1 5 g
+    -- Generate a random byte-string to sample passrhymes.
+  _ <- sampleAndPrintRhymes dictionary lineMeter 1 5 g
+    -- Print five examples.
   return ()
