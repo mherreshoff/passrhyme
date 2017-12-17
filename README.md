@@ -20,54 +20,106 @@ dictionary and the 10k word list.
 Note also: the examples below are drawn from the best of four or five tries.
 
 ## Example Execution
-
 ```
 Enter a string of dots and dashes to select your meter.
-(- means a stressed sylable and . means an unstressed sylable.)
+(- means a stressed syllable and . means an unstressed syllable.)
 Press Enter (blank input) for iambic tetrameter (.-.-.-.-)
-.-.-.-.-.
+
 
 Sample #1:
-amelia lowered graduated
-dispersion duncan celebrated
+portrayed secure digest vignette
+comprised mcleod unleashed cadet
 
-Selecting the rhyme gave us 15.235565522936467 bits of surprize.
-Given those rhyme words, the remainder of the phrase had 46.41529838093291 bits of surprize.
-For a total surprize of: 61.65086390386938 bits.
+Selecting the rhyme gave us 14.250520490567572 bits of surprize.
+Given those rhyme words, the remainder had 63.38724775654216 bits of surprize.
+For a total surprize of: 77.63776824710973 bits.
 
 
 Sample #2:
-develops charters resignation
-defenders storage designation
+contain rebuilt conclude quartet
+fulfilled ukraine tulane octet
 
-Selecting the rhyme gave us 15.235565522936467 bits of surprize.
-Given those rhyme words, the remainder of the phrase had 46.41529838093291 bits of surprize.
-For a total surprize of: 61.65086390386938 bits.
+Selecting the rhyme gave us 14.250520490567572 bits of surprize.
+Given those rhyme words, the remainder had 63.38724775654216 bits of surprize.
+For a total surprize of: 77.63776824710973 bits.
 
 
 Sample #3:
-endowment cluster formulation
-antarctic wealthy alteration
+succeeding factions quarterback
+dorado buses paperback
 
-Selecting the rhyme gave us 15.235565522936467 bits of surprize.
-Given those rhyme words, the remainder of the phrase had 46.41529838093291 bits of surprize.
-For a total surprize of: 61.65086390386938 bits.
+Selecting the rhyme gave us 14.250520490567572 bits of surprize.
+Given those rhyme words, the remainder had 48.52999834601879 bits of surprize.
+For a total surprize of: 62.78051883658637 bits.
 
 
 Sample #4:
-nirvana epson population
-transistor merlin augmentation
+mackay perceived phenomenon
+dimension rowan pentagon
 
-Selecting the rhyme gave us 15.235565522936467 bits of surprize.
-Given those rhyme words, the remainder of the phrase had 46.41529838093291 bits of surprize.
-For a total surprize of: 61.65086390386938 bits.
+Selecting the rhyme gave us 14.250520490567572 bits of surprize.
+Given those rhyme words, the remainder had 45.393356056092216 bits of surprize.
+For a total surprize of: 59.64387654665979 bits.
 
 
 Sample #5:
-exchanged belong evacuation
-vanessa pointing computation
+sergei adair champagne michele
+rotations booster danielle
 
-Selecting the rhyme gave us 15.235565522936467 bits of surprize.
-Given those rhyme words, the remainder of the phrase had 43.43260354790077 bits of surprize.
-For a total surprize of: 58.66816907083724 bits.
+Selecting the rhyme gave us 14.250520490567572 bits of surprize.
+Given those rhyme words, the remainder had 55.958623051280476 bits of surprize.
+For a total surprize of: 70.20914354184805 bits.
+```
+
+# Custom Meter Example
+```
+$ stack exec passrhyme-exe
+Enter a string of dots and dashes to select your meter.
+(- means a stressed syllable and . means an unstressed syllable.)
+Press Enter (blank input) for iambic tetrameter (.-.-.-.-)
+-..-..-
+
+Sample #1:
+publishes rubin mccain
+dorothy rio campaign
+
+Selecting the rhyme gave us 12.774581180893598 bits of surprize.
+Given those rhyme words, the remainder had 49.78442632576881 bits of surprize.
+For a total surprize of: 62.55900750666241 bits.
+
+
+Sample #2:
+congresses gorgeous portrayed
+treaty disciple brigade
+
+Selecting the rhyme gave us 12.774581180893598 bits of surprize.
+Given those rhyme words, the remainder had 49.78442632576881 bits of surprize.
+For a total surprize of: 62.55900750666241 bits.
+
+
+Sample #3:
+artist commences surveys
+palaces robson arrays
+
+Selecting the rhyme gave us 12.774581180893598 bits of surprize.
+Given those rhyme words, the remainder had 49.78442632576881 bits of surprize.
+For a total surprize of: 62.55900750666241 bits.
+
+
+Sample #4:
+baker deductions marquee
+reckless thereafter esprit
+
+Selecting the rhyme gave us 12.774581180893598 bits of surprize.
+Given those rhyme words, the remainder had 49.78442632576881 bits of surprize.
+For a total surprize of: 62.55900750666241 bits.
+
+
+Sample #5:
+fetal mutations descent
+extra pathetic consent
+
+Selecting the rhyme gave us 12.774581180893598 bits of surprize.
+Given those rhyme words, the remainder had 49.78442632576881 bits of surprize.
+For a total surprize of: 62.55900750666241 bits.
 ```
