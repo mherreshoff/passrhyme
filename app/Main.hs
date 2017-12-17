@@ -63,8 +63,8 @@ bits = logBase 2.0 . fromIntegral
 
 -- Given a dictionary, a line meter (stress pattern) and a random number generator, sample a passrhyme and print it (including
 -- entropy information.)
-sampleAndPrintRhyme :: (RandomGen g) => [Pronunciation] -> [Bool] -> g -> IO g
-sampleAndPrintRhyme dictionary lineMeter g = do
+sampleAndPrintRhymes :: (RandomGen g) => [Pronunciation] -> [Bool] -> Int -> Int -> g -> IO g
+sampleAndPrintRhymes dictionary lineMeter k n g = do
   -- First we pick the rhyming words:
   let endWords = [p | p <- dictionary, stressPattern p `suffixOf` lineMeter]
     -- Words that match our meter if they're at the end of the line.
@@ -82,6 +82,9 @@ sampleAndPrintRhyme dictionary lineMeter g = do
   let line2 = constructLine dictionary line2Remainder line2Index ++ [w2]
 
   -- Then, show them:
+  
+  putStrLn $ ""
+  putStrLn $ "Sample #" ++ show k ++ ":"
   putStrLn $ showLine line1
   putStrLn $ showLine line2
 
@@ -91,19 +94,23 @@ sampleAndPrintRhyme dictionary lineMeter g = do
   let totalBits = rhymeBits + restBits
   putStrLn $ ""
   putStrLn $ "Selecting the rhyme gave us " ++ show rhymeBits ++ " bits of surprize."
-  putStrLn $ "For those rhyme words, we had " ++ show restBits ++ " bits of surprize."
+  putStrLn $ "Given those rhyme words, the remainder had " ++ show restBits ++ " bits of surprize."
   putStrLn $ "For a total surprize of: " ++ show totalBits ++ " bits."
-  return g4
+  putStrLn $ ""
+  g5 <- if (k >= n)
+    then return g4
+    else sampleAndPrintRhymes dictionary lineMeter (k+1) n g4
+  return g5
 
 main :: IO ()
 main = do 
   largeDictionary <- readDictionaryFile "cmudict-0.7b"
-  allowedWords <- (Set.fromList . lines) <$> readFile "google-10000-english-no-swears.txt"
+  allowedWords <- (Set.fromList . lines) <$> readFile "wordlist.txt"
   let dictionary' = filter ((`Set.member`allowedWords) . word) largeDictionary
   let dictionary = filter ((>1).length.stressPattern) dictionary'
     -- Keep only the allowed words.  (CMU Dict has lots of weird proper names, etc.)
   -- putStrLn $ "numWords=" ++ show (length dictionary)
   lineMeter <- readStressPattern
   g <- paranoidRandomBytes kMaxRandomBytes
-  _ <- sampleAndPrintRhyme dictionary lineMeter g
+  g2 <- sampleAndPrintRhymes dictionary lineMeter 1 5 g
   return ()
