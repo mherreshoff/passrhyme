@@ -19,26 +19,55 @@ dictionary and the 10k word list.
 
 Note also: the examples below are drawn from the best of four or five tries.
 
-## Example (default meter)
+## Example Execution
 
 ```
-$ stack exec passrhyme-exe
 Enter a string of dots and dashes to select your meter.
 (- means a stressed sylable and . means an unstressed sylable.)
 Press Enter (blank input) for iambic tetrameter (.-.-.-.-)
+.-.-.-.-.
 
-careers subjective legends claim
-brunette division ada aim
-```
+Sample #1:
+amelia lowered graduated
+dispersion duncan celebrated
 
-## Example (custom meter)
+Selecting the rhyme gave us 15.235565522936467 bits of surprize.
+Given those rhyme words, the remainder of the phrase had 46.41529838093291 bits of surprize.
+For a total surprize of: 61.65086390386938 bits.
 
-```
-$ stack exec passrhyme-exe
-Enter a string of dots and dashes to select your meter.
-(- means a stressed sylable and . means an unstressed sylable.)
-Press Enter (blank input) for iambic tetrameter (.-.-.-.-)
--..-..-
-surely validity trains
-rural committed explains
+
+Sample #2:
+develops charters resignation
+defenders storage designation
+
+Selecting the rhyme gave us 15.235565522936467 bits of surprize.
+Given those rhyme words, the remainder of the phrase had 46.41529838093291 bits of surprize.
+For a total surprize of: 61.65086390386938 bits.
+
+
+Sample #3:
+endowment cluster formulation
+antarctic wealthy alteration
+
+Selecting the rhyme gave us 15.235565522936467 bits of surprize.
+Given those rhyme words, the remainder of the phrase had 46.41529838093291 bits of surprize.
+For a total surprize of: 61.65086390386938 bits.
+
+
+Sample #4:
+nirvana epson population
+transistor merlin augmentation
+
+Selecting the rhyme gave us 15.235565522936467 bits of surprize.
+Given those rhyme words, the remainder of the phrase had 46.41529838093291 bits of surprize.
+For a total surprize of: 61.65086390386938 bits.
+
+
+Sample #5:
+exchanged belong evacuation
+vanessa pointing computation
+
+Selecting the rhyme gave us 15.235565522936467 bits of surprize.
+Given those rhyme words, the remainder of the phrase had 43.43260354790077 bits of surprize.
+For a total surprize of: 58.66816907083724 bits.
 ```
