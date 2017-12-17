@@ -16,6 +16,7 @@ module Lib
   , rhymeSets
   , countLines
   , countLinesWithIntermediates
+  , constructLine
   , generateLine
   , generateLineWithLastWord
   ) where

@@ -58,25 +58,51 @@ readStressPattern = do
   else if null line then return iambicTetrameter
   else return (map (=='-') line)
 
+bits :: (Integral n) => n -> Double
+bits = logBase 2.0 . fromIntegral
+
+-- Given a dictionary, a line meter (stress pattern) and a random number generator, sample a passrhyme and print it (including
+-- entropy information.)
+sampleAndPrintRhyme :: (RandomGen g) => [Pronunciation] -> [Bool] -> g -> IO g
+sampleAndPrintRhyme dictionary lineMeter g = do
+  -- First we pick the rhyming words:
+  let endWords = [p | p <- dictionary, stressPattern p `suffixOf` lineMeter]
+    -- Words that match our meter if they're at the end of the line.
+  let rhymePairs = pairsFromSets (rhymeSets endWords)
+  let ((w1, w2), g2) = choose rhymePairs g
+  -- Then we generate the rest of the couplet
+  let line1Remainder = take (length lineMeter - length (stressPattern w1)) lineMeter
+  let line2Remainder = take (length lineMeter - length (stressPattern w2)) lineMeter
+  let line1Possibilities = countLines dictionary line1Remainder
+  let line2Possibilities = countLines dictionary line2Remainder
+  let (line1Index, g3) = randomR (0, line1Possibilities-1) g2
+  let (line2Index, g4) = randomR (0, line2Possibilities-1) g3
+
+  let line1 = constructLine dictionary line1Remainder line1Index ++ [w1]
+  let line2 = constructLine dictionary line2Remainder line2Index ++ [w2]
+
+  -- Then, show them:
+  putStrLn $ showLine line1
+  putStrLn $ showLine line2
+
+  -- And print out some stats:
+  let rhymeBits = bits (length rhymePairs)
+  let restBits = bits line1Possibilities + bits line2Possibilities
+  let totalBits = rhymeBits + restBits
+  putStrLn $ "Selecting the rhyme gave us " ++ show rhymeBits ++ " bits of entropy."
+  putStrLn $ "For that rhyme words, we had " ++ show restBits ++ " bits of entropy."
+  putStrLn $ "For a total surprize of: " ++ show totalBits ++ " bits of entropy."
+  return g4
+
 main :: IO ()
 main = do 
   largeDictionary <- readDictionaryFile "cmudict-0.7b"
   allowedWords <- (Set.fromList . lines) <$> readFile "google-10000-english-no-swears.txt"
-  let dictionary = filter ((`Set.member`allowedWords) . word) largeDictionary
+  let dictionary' = filter ((`Set.member`allowedWords) . word) largeDictionary
+  let dictionary = filter ((>1).length.stressPattern) dictionary'
     -- Keep only the allowed words.  (CMU Dict has lots of weird proper names, etc.)
   -- putStrLn $ "numWords=" ++ show (length dictionary)
   lineMeter <- readStressPattern
   g <- paranoidRandomBytes kMaxRandomBytes
-  -- First we pick the rhyming words:
-  let endWords = [p | p <- dictionary, stressPattern p `suffixOf` lineMeter]
-    -- Words that match our meter if they're at the end of the line.
-  let ((w1, w2), g2) = chooseRandomPair (rhymeSets endWords) g
-  -- Then we generate the two lines of poetry
-  let (line1, g3) = generateLineWithLastWord dictionary lineMeter w1 g2
-  let (line2, _) = generateLineWithLastWord dictionary lineMeter w2 g3
-  -- Finally, show them:
-  putStrLn $ showLine line1
-  putStrLn $ showLine line2
-
-  let l2 = map (logBase 2.0 . fromIntegral)
-  putStrLn $ "itermediate bit counts:" ++ show (l2 $ countLinesWithIntermediates dictionary lineMeter)
+  _ <- sampleAndPrintRhyme dictionary lineMeter g
+  return ()
