@@ -43,13 +43,16 @@ pairsFromSets = concatMap pairs where
   pairs [] = []
   pairs (x:xs) = map (\x' -> (x, x')) xs ++ pairs xs
 
+nonEmptyTails :: [a] -> [[a]]
+nonEmptyTails = tailsWhere (const True)
+
 tailsWhere :: (a -> Bool) -> [a] -> [[a]]
 tailsWhere pred = iter where
   iter [] = []
   iter t@(x:xs) = (if pred x then (t:) else id) $ iter xs
 
-countMap :: (Ord a, Num n) => [a] -> Map a n
-countMap = Map.fromListWith (+) . map (id &&& const 1)
+keyBy :: (Ord k) => (v -> k) -> [v] -> Map k [v]
+keyBy f vs = Map.fromListWith (++) $ map (f &&& (\v -> [v])) vs
 
 ------ Random Utils:
 
@@ -86,7 +89,7 @@ nonAlternate :: Pronunciation -> Bool
 nonAlternate p = last (word p) /= ')'
 
 -- Reads the numeric tags the CMU dictionary puts on its vowels and returns a list (one bool per syllable) with True indicating
--- a stressed syllable and False indicating an unstressed syllabel.
+-- a stressed syllable and False indicating an unstressed syllable.
 stressPattern :: Pronunciation -> [Bool]
 stressPattern p = pattern where
   pattern = map (/='0') $ filter isNumber $ map last $ phonemes p
@@ -110,11 +113,33 @@ countLines dictionary pattern = last $ countLinesWithIntermediates dictionary pa
 
 countLinesWithIntermediates :: [Pronunciation] -> [Bool] -> [Integer]
 countLinesWithIntermediates dictionary pattern = resList where
-  dictCountsByStress = countMap $ map stressPattern dictionary
+  dictCountsByStress = fromIntegral.length <$> keyBy stressPattern dictionary
   count sp = maybe 0 id (Map.lookup sp dictCountsByStress)
+  resList :: [Integer]
   resList = [1] ++ [res n | n <- [1..length pattern]]
-  transitions n = init $ tails $ take n pattern
+  transitions n = nonEmptyTails $ take n pattern
   res n = sum [resList !! (n-length t) * count t | t <- transitions n]
+
+constructLine :: [Pronunciation] -> [Bool] -> Integer -> [Pronunciation]
+constructLine dictionary pattern index = result where
+  wordsByStressMap = keyBy stressPattern dictionary
+  wordsByStress sp = maybe [] id (Map.lookup sp wordsByStressMap)
+  counts = countLinesWithIntermediates dictionary pattern
+  result = iter (fromIntegral $ length pattern) index
+  transitions n = nonEmptyTails $ take n pattern
+  iter :: Int -> Integer -> [Pronunciation]
+  iter 0 _ = []
+  iter n idx = iter n' idx' ++ [lastWord] where
+    possibleLastWords = concatMap wordsByStress $ transitions n
+    numPossibilitiesGivenLastWord =
+      [counts !! (n - length (stressPattern p)) | p <- possibleLastWords]
+    startingIndexGivenForLastWord = scanl (+) 0 numPossibilitiesGivenLastWord 
+    lastWordId =
+      fromIntegral $ subtract 1 $ length $ takeWhile (<idx) startingIndexGivenForLastWord 
+    lastWord = possibleLastWords !! lastWordId
+    lastWordLen = length $ stressPattern lastWord
+    n' = n - lastWordLen
+    idx' = idx - startingIndexGivenForLastWord !! lastWordId
 
 -- Given a Pronunciation list for all the available words and a meter, produce a line of poetry.
 generateLine :: (RandomGen g) => [Pronunciation] -> [Bool] -> g -> ([Pronunciation], g)
