@@ -1,6 +1,10 @@
 # passrhyme
 
-Passrhyme is a rhyming password generator.  To build it in Mac OS X (with homebrew), run:
+Passrhyme is a rhyming password generator.  It is written in Haskell and builds using stack.  To acquire stack, follow the
+instructions at: https://docs.haskellstack.org/en/stable/README/
+
+## Mac OS X Building instructions
+To build it in Mac OS X (with homebrew), run the following commands (in the root directory of the repository)
 ```
 brew install openssl
 stack build --extra-include-dirs=/usr/local/opt/openssl/include --extra-lib-dirs=/usr/local/opt/openssl/lib
@@ -14,10 +18,8 @@ stack exec passrhyme-exe
 ```
 
 
-Note: you need to run the executable from the root directory of this repository so that passrhyme can find the CMU prounouncing
-dictionary and the word list.
-
-Note also: the examples below are drawn from the best of four or five tries.
+Note: you also need to run the executable from the root directory of this repository so that passrhyme can find the CMU
+prounouncing dictionary and the word list.
 
 ## Example Execution
 ```
@@ -71,7 +73,7 @@ Given those rhyme words, the remainder had 55.958623051280476 bits of surprise.
 For a total surprise of: 70.20914354184805 bits.
 ```
 
-# Custom Meter Example
+## Custom Meter Example
 ```
 $ stack exec passrhyme-exe
 Enter a string of dots and dashes to select your meter.
