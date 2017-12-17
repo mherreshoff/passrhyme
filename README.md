@@ -15,7 +15,7 @@ stack exec passrhyme-exe
 
 
 Note: you need to run the executable from the root directory of this repository so that passrhyme can find the CMU prounouncing
-dictionary and the 10k word list.
+dictionary and the word list.
 
 Note also: the examples below are drawn from the best of four or five tries.
 
