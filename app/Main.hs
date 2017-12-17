@@ -48,7 +48,7 @@ iambicTetrameter = take 8 (cycle [False, True])
 readStressPattern :: IO [Bool]
 readStressPattern = do
   putStrLn "Enter a string of dots and dashes to select your meter."
-  putStrLn "(- means a stressed sylable and . means an unstressed sylable.)"
+  putStrLn "(- means a stressed syllable and . means an unstressed syllable.)"
   putStrLn "Press Enter (blank input) for iambic tetrameter (.-.-.-.-)"
   line <- getLine
   if any (\c -> c /='.' && c /= '-') line

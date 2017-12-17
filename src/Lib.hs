@@ -102,7 +102,7 @@ rhymeStem :: Pronunciation -> [String]
 rhymeStem p = if null t then phonemes p else last t where
  t = tailsWhere isStressedVowel $ phonemes p
 
--- Groups Pronunciations by their 'rymeStem's.
+-- Groups Pronunciations by their 'rhymeStem's.
 rhymeSets :: [Pronunciation] -> [[Pronunciation]]
 rhymeSets = Map.elems . Map.fromListWith (++) . map (rhymeStem &&& (\x -> [x]))
 
