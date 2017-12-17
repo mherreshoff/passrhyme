@@ -6,7 +6,7 @@ import Data.ByteString (unpack)
 import Data.List (intercalate)
 import Data.Word
 import Lib
-import OpenSSL.Random
+import qualified OpenSSL.Random as OpenSSLRand
 import qualified System.Entropy as SE
 import System.Random
 import qualified Data.Set as Set
@@ -19,7 +19,7 @@ import qualified Data.Set as Set
 paranoidRandomBytes :: Int -> IO RandomBytes
 paranoidRandomBytes n = do
   e1 <- unpack <$> SE.getEntropy n
-  e2 <- unpack <$> randBytes n
+  e2 <- unpack <$> OpenSSLRand.randBytes n
   e3 <- unpack <$> CRE.getEntropy n
   let xor3 a b c = xor (xor a b) c
   return $ RandomBytes $ zipWith3 xor3 e1 e2 e3
