@@ -3,7 +3,7 @@ All of the Haskell code here in this repository is placed under the BSD3 Licence
 cmudict-0.7b is from The CMU Pronouncing Dictionary (simplified BSD licence.)
 See: http://svn.code.sf.net/p/cmusphinx/code/trunk/cmudict/
 
-wordlist.txt is the top 20k entries from Peter Norvig's compilation of the 1/3 million most frequent English words.
+wordlist.txt comes from Peter Norvig's compilation of the 1/3 million most frequent English words.
 See: http://norvig.com/ngrams/
 
 
