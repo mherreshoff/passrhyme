@@ -30,45 +30,45 @@ Sample #1:
 portrayed secure digest vignette
 comprised mcleod unleashed cadet
 
-Selecting the rhyme gave us 14.250520490567572 bits of surprize.
-Given those rhyme words, the remainder had 63.38724775654216 bits of surprize.
-For a total surprize of: 77.63776824710973 bits.
+Selecting the rhyme gave us 14.250520490567572 bits of surprise.
+Given those rhyme words, the remainder had 63.38724775654216 bits of surprise.
+For a total surprise of: 77.63776824710973 bits.
 
 
 Sample #2:
 contain rebuilt conclude quartet
 fulfilled ukraine tulane octet
 
-Selecting the rhyme gave us 14.250520490567572 bits of surprize.
-Given those rhyme words, the remainder had 63.38724775654216 bits of surprize.
-For a total surprize of: 77.63776824710973 bits.
+Selecting the rhyme gave us 14.250520490567572 bits of surprise.
+Given those rhyme words, the remainder had 63.38724775654216 bits of surprise.
+For a total surprise of: 77.63776824710973 bits.
 
 
 Sample #3:
 succeeding factions quarterback
 dorado buses paperback
 
-Selecting the rhyme gave us 14.250520490567572 bits of surprize.
-Given those rhyme words, the remainder had 48.52999834601879 bits of surprize.
-For a total surprize of: 62.78051883658637 bits.
+Selecting the rhyme gave us 14.250520490567572 bits of surprise.
+Given those rhyme words, the remainder had 48.52999834601879 bits of surprise.
+For a total surprise of: 62.78051883658637 bits.
 
 
 Sample #4:
 mackay perceived phenomenon
 dimension rowan pentagon
 
-Selecting the rhyme gave us 14.250520490567572 bits of surprize.
-Given those rhyme words, the remainder had 45.393356056092216 bits of surprize.
-For a total surprize of: 59.64387654665979 bits.
+Selecting the rhyme gave us 14.250520490567572 bits of surprise.
+Given those rhyme words, the remainder had 45.393356056092216 bits of surprise.
+For a total surprise of: 59.64387654665979 bits.
 
 
 Sample #5:
 sergei adair champagne michele
 rotations booster danielle
 
-Selecting the rhyme gave us 14.250520490567572 bits of surprize.
-Given those rhyme words, the remainder had 55.958623051280476 bits of surprize.
-For a total surprize of: 70.20914354184805 bits.
+Selecting the rhyme gave us 14.250520490567572 bits of surprise.
+Given those rhyme words, the remainder had 55.958623051280476 bits of surprise.
+For a total surprise of: 70.20914354184805 bits.
 ```
 
 # Custom Meter Example
@@ -83,43 +83,43 @@ Sample #1:
 publishes rubin mccain
 dorothy rio campaign
 
-Selecting the rhyme gave us 12.774581180893598 bits of surprize.
-Given those rhyme words, the remainder had 49.78442632576881 bits of surprize.
-For a total surprize of: 62.55900750666241 bits.
+Selecting the rhyme gave us 12.774581180893598 bits of surprise.
+Given those rhyme words, the remainder had 49.78442632576881 bits of surprise.
+For a total surprise of: 62.55900750666241 bits.
 
 
 Sample #2:
 congresses gorgeous portrayed
 treaty disciple brigade
 
-Selecting the rhyme gave us 12.774581180893598 bits of surprize.
-Given those rhyme words, the remainder had 49.78442632576881 bits of surprize.
-For a total surprize of: 62.55900750666241 bits.
+Selecting the rhyme gave us 12.774581180893598 bits of surprise.
+Given those rhyme words, the remainder had 49.78442632576881 bits of surprise.
+For a total surprise of: 62.55900750666241 bits.
 
 
 Sample #3:
 artist commences surveys
 palaces robson arrays
 
-Selecting the rhyme gave us 12.774581180893598 bits of surprize.
-Given those rhyme words, the remainder had 49.78442632576881 bits of surprize.
-For a total surprize of: 62.55900750666241 bits.
+Selecting the rhyme gave us 12.774581180893598 bits of surprise.
+Given those rhyme words, the remainder had 49.78442632576881 bits of surprise.
+For a total surprise of: 62.55900750666241 bits.
 
 
 Sample #4:
 baker deductions marquee
 reckless thereafter esprit
 
-Selecting the rhyme gave us 12.774581180893598 bits of surprize.
-Given those rhyme words, the remainder had 49.78442632576881 bits of surprize.
-For a total surprize of: 62.55900750666241 bits.
+Selecting the rhyme gave us 12.774581180893598 bits of surprise.
+Given those rhyme words, the remainder had 49.78442632576881 bits of surprise.
+For a total surprise of: 62.55900750666241 bits.
 
 
 Sample #5:
 fetal mutations descent
 extra pathetic consent
 
-Selecting the rhyme gave us 12.774581180893598 bits of surprize.
-Given those rhyme words, the remainder had 49.78442632576881 bits of surprize.
-For a total surprize of: 62.55900750666241 bits.
+Selecting the rhyme gave us 12.774581180893598 bits of surprise.
+Given those rhyme words, the remainder had 49.78442632576881 bits of surprise.
+For a total surprise of: 62.55900750666241 bits.
 ```

@@ -93,9 +93,9 @@ sampleAndPrintRhymes dictionary lineMeter k n g = do
   let restBits = bits line1Possibilities + bits line2Possibilities
   let totalBits = rhymeBits + restBits
   putStrLn $ ""
-  putStrLn $ "Selecting the rhyme gave us " ++ show rhymeBits ++ " bits of surprize."
-  putStrLn $ "Given those rhyme words, the remainder had " ++ show restBits ++ " bits of surprize."
-  putStrLn $ "For a total surprize of: " ++ show totalBits ++ " bits."
+  putStrLn $ "Selecting the rhyme gave us " ++ show rhymeBits ++ " bits of surprise."
+  putStrLn $ "Given those rhyme words, the remainder had " ++ show restBits ++ " bits of surprise."
+  putStrLn $ "For a total surprise of: " ++ show totalBits ++ " bits."
   putStrLn $ ""
   g5 <- if (k >= n)
     then return g4
