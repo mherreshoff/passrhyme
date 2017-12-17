@@ -134,7 +134,7 @@ constructLine dictionary pattern index = result where
       [counts !! (n - length (stressPattern p)) | p <- possibleLastWords]
     startingIndexGivenForLastWord = scanl (+) 0 numPossibilitiesGivenLastWord 
     lastWordId =
-      fromIntegral $ subtract 1 $ length $ takeWhile (<idx) startingIndexGivenForLastWord 
+      fromIntegral $ subtract 1 $ length $ takeWhile (<=idx) startingIndexGivenForLastWord
     lastWord = possibleLastWords !! lastWordId
     lastWordLen = length $ stressPattern lastWord
     n' = n - lastWordLen
