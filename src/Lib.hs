@@ -104,7 +104,7 @@ rhymeStem p = if null t then phonemes p else last t where
 
 -- Groups Pronunciations by their 'rhymeStem's.
 rhymeSets :: [Pronunciation] -> [[Pronunciation]]
-rhymeSets = Map.elems . Map.fromListWith (++) . map (rhymeStem &&& (\x -> [x]))
+rhymeSets = Map.elems . keyBy rhymeStem
 
 -- countLines
 countLines :: [Pronunciation] -> [Bool] -> Integer
