@@ -77,3 +77,6 @@ main = do
   -- Finally, show them:
   putStrLn $ showLine line1
   putStrLn $ showLine line2
+
+  let l2 = map (logBase 2.0 . fromIntegral)
+  putStrLn $ "itermediate bit counts:" ++ show (l2 $ countLinesWithIntermediates dictionary lineMeter)

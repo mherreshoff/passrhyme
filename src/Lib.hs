@@ -14,6 +14,8 @@ module Lib
   , stressPattern
   , rhymeStem
   , rhymeSets
+  , countLines
+  , countLinesWithIntermediates
   , generateLine
   , generateLineWithLastWord
   ) where
@@ -46,6 +48,8 @@ tailsWhere pred = iter where
   iter [] = []
   iter t@(x:xs) = (if pred x then (t:) else id) $ iter xs
 
+countMap :: (Ord a, Num n) => [a] -> Map a n
+countMap = Map.fromListWith (+) . map (id &&& const 1)
 
 ------ Random Utils:
 
@@ -99,6 +103,18 @@ rhymeStem p = if null t then phonemes p else last t where
 -- Groups Pronunciations by their 'rymeStem's.
 rhymeSets :: [Pronunciation] -> [[Pronunciation]]
 rhymeSets = Map.elems . Map.fromListWith (++) . map (rhymeStem &&& (\x -> [x]))
+
+-- countLines
+countLines :: [Pronunciation] -> [Bool] -> Integer
+countLines dictionary pattern = last $ countLinesWithIntermediates dictionary pattern
+
+countLinesWithIntermediates :: [Pronunciation] -> [Bool] -> [Integer]
+countLinesWithIntermediates dictionary pattern = resList where
+  dictCountsByStress = countMap $ map stressPattern dictionary
+  count sp = maybe 0 id (Map.lookup sp dictCountsByStress)
+  resList = [1] ++ [res n | n <- [1..length pattern]]
+  transitions n = init $ tails $ take n pattern
+  res n = sum [resList !! (n-length t) * count t | t <- transitions n]
 
 -- Given a Pronunciation list for all the available words and a meter, produce a line of poetry.
 generateLine :: (RandomGen g) => [Pronunciation] -> [Bool] -> g -> ([Pronunciation], g)
