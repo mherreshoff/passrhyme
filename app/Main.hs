@@ -89,9 +89,10 @@ sampleAndPrintRhyme dictionary lineMeter g = do
   let rhymeBits = bits (length rhymePairs)
   let restBits = bits line1Possibilities + bits line2Possibilities
   let totalBits = rhymeBits + restBits
-  putStrLn $ "Selecting the rhyme gave us " ++ show rhymeBits ++ " bits of entropy."
-  putStrLn $ "For that rhyme words, we had " ++ show restBits ++ " bits of entropy."
-  putStrLn $ "For a total surprize of: " ++ show totalBits ++ " bits of entropy."
+  putStrLn $ ""
+  putStrLn $ "Selecting the rhyme gave us " ++ show rhymeBits ++ " bits of surprize."
+  putStrLn $ "For those rhyme words, we had " ++ show restBits ++ " bits of surprize."
+  putStrLn $ "For a total surprize of: " ++ show totalBits ++ " bits."
   return g4
 
 main :: IO ()

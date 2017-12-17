@@ -17,8 +17,6 @@ module Lib
   , countLines
   , countLinesWithIntermediates
   , constructLine
-  , generateLine
-  , generateLineWithLastWord
   ) where
 
 import Control.Arrow
@@ -141,20 +139,3 @@ constructLine dictionary pattern index = result where
     lastWordLen = length $ stressPattern lastWord
     n' = n - lastWordLen
     idx' = idx - startingIndexGivenForLastWord !! lastWordId
-
--- Given a Pronunciation list for all the available words and a meter, produce a line of poetry.
-generateLine :: (RandomGen g) => [Pronunciation] -> [Bool] -> g -> ([Pronunciation], g)
-generateLine dictionary = iter where
-  iter [] g = ([], g)
-  iter xs g = (w:ws, g'') where
-   (w, g') = choose [p | p <- dictionary, stressPattern p `prefixOf` xs] g
-   xs' = tails xs !! (length $ stressPattern w)
-   (ws, g'') = iter xs' g'
-
--- The same with a fixed last word (used to create rhyming couplets.)
-generateLineWithLastWord :: (RandomGen g)
-    => [Pronunciation] -> [Bool] -> Pronunciation -> g -> ([Pronunciation], g)
-generateLineWithLastWord dictionary lineMeter rhymeWord g = (lineInit ++ [rhymeWord], g') where
-  rhymeWordLength = length (stressPattern rhymeWord)
-  meter = inits lineMeter !! (length lineMeter - rhymeWordLength)
-  (lineInit, g') = generateLine dictionary meter g
