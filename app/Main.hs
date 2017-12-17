@@ -107,9 +107,10 @@ main = do
   largeDictionary <- readDictionaryFile "cmudict-0.7b"
   allowedWords <- (Set.fromList . lines) <$> readFile "wordlist.txt"
   let dictionary' = filter ((`Set.member`allowedWords) . word) largeDictionary
-  let dictionary = filter ((>1).length.stressPattern) dictionary'
     -- Keep only the allowed words.  (CMU Dict has lots of weird proper names, etc.)
-  -- putStrLn $ "numWords=" ++ show (length dictionary)
+  let dictionary = filter ((>1).length.stressPattern) dictionary'
+    -- Throw out the one syllable words (since we're using a uniform sampler, we'd end up with many passphrases made
+    -- mostly of one syllable words otherwise, and those are harder to memorize.)
   lineMeter <- readStressPattern
   g <- paranoidRandomBytes kMaxRandomBytes
   g2 <- sampleAndPrintRhymes dictionary lineMeter 1 5 g
