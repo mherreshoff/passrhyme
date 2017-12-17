@@ -11,17 +11,18 @@ stack build --extra-include-dirs=/usr/local/opt/openssl/include --extra-lib-dirs
 ```
 (Those flags are needed the first time you build it because we depend on HsOpenSSL as one of our sources of secure random bits, and those are the locations where homebrew puts the openssl library.)
 
-Then you an run it like this:
+Then you can run it like this:
 
 ```
 stack exec passrhyme-exe
 ```
 
-
-Note: you also need to run the executable from the root directory of this repository so that passrhyme can find the CMU
+You also need to run the executable from the root directory of this repository so that passrhyme can find the CMU
 prounouncing dictionary and the word list.
 
-## Example Execution
+# Example Outputs
+
+## Iambic Tetrameter
 ```
 Enter a string of dots and dashes to select your meter.
 (- means a stressed syllable and . means an unstressed syllable.)
