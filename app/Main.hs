@@ -1,33 +1,37 @@
 module Main where
 
+import qualified Crypto.Random.Entropy as CRE
 import Data.Bits (xor)
 import Data.ByteString (unpack)
 import Data.List (intercalate)
+import Data.Word
 import Lib
 import OpenSSL.Random
-import System.Entropy
+import qualified System.Entropy as SE
 import System.Random
 import qualified Data.Set as Set
 
 
 ----- Randomness utils:
 
--- A paranoid way of generating random bits (we use the 'entropy' module and the 'HsOpenSSL' module and xor the results
--- together.)
+-- A paranoid way of generating random bits (we use the 'entropy' module, the 'HsOpenSSL' module and the cryptonite module and
+-- xor the results together.)
 paranoidRandomBytes :: Int -> IO RandomBytes
 paranoidRandomBytes n = do
-  e1 <- getEntropy n
-  e2 <- randBytes n
-  return $ RandomBytes $ map fromIntegral $ zipWith xor (unpack e1) (unpack e2)
+  e1 <- unpack <$> SE.getEntropy n
+  e2 <- unpack <$> randBytes n
+  e3 <- unpack <$> CRE.getEntropy n
+  let xor3 a b c = xor (xor a b) c
+  return $ RandomBytes $ zipWith3 xor3 e1 e2 e3
 
 
 -- An interface to expose some random bytes we've gotten from the system as a RandomGen object.
-newtype RandomBytes = RandomBytes [Int]
+newtype RandomBytes = RandomBytes [Word8]
 
 kMaxRandomBytes = 1000000
 
 instance RandomGen RandomBytes where
-  next (RandomBytes (x:xs)) = (x, RandomBytes xs)
+  next (RandomBytes (x:xs)) = (fromIntegral x, RandomBytes xs)
   next (RandomBytes []) = error "Random bytes exhausted.  Try a higher value of kMaxRandomBytes."
   genRange _ = (0, 255)
   split _ = error "Not implemented."
