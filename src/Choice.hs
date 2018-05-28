@@ -27,7 +27,6 @@ choose (Choice _ c) idx = c idx
 
 ----- Instances:
 instance Functor Choice where
-  fmap :: (a -> b) -> Choice a -> Choice b
   fmap f (Choice n g) = Choice n (f . g)
 
 instance Applicative Choice where
@@ -36,7 +35,6 @@ instance Applicative Choice where
 
 instance Monad Choice where
   return = pure
-  (>>=) :: Choice a -> (a -> Choice b) -> Choice b
   ca >>= f = choiceUnion $ map f $ choiceToList ca
 
 
