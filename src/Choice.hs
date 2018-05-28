@@ -8,6 +8,7 @@ module Choice
   , choicePair
   ) where
 import Data.List ( genericIndex, genericLength )
+import System.Random
 
 ----- Choice Data-Structure:
 data Choice a = Choice Integer (Integer -> a)
@@ -23,6 +24,10 @@ countChoices (Choice n _) = n
 
 choose :: Choice a -> Integer -> a
 choose (Choice _ c) idx = c idx
+
+chooseRandomly :: (RandomGen g) => Choice a -> g -> (a, g)
+chooseRandomly c g = (choose c idx, g') where
+  (idx, g') = randomR (0, countChoices c - 1) g
 
 
 ----- Instances:
