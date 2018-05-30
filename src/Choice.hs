@@ -33,6 +33,8 @@ chooseRandomly c g = (choose c idx, g') where
 
 ----- Instances:
 instance Monoid (Choice a) where
+  mempty = Choice 0 (\idx -> error "Attempted to choose from empty choice.")
+  mappend a b = mconcat [a, b]
   mconcat = choiceUnion
 
 instance Functor Choice where
