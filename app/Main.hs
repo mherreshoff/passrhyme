@@ -50,15 +50,14 @@ sampleAndPrintRhymes dictionary lineMeter k n g = do
   let rhymeChoice = choiceUnion $ map (choicePair . listToChoice) rhymeSetsEW
   let ((w1, w2), g2) = chooseRandomly rhymeChoice g
   -- Then we generate the rest of the couplet
-  let line1Remainder = take (length lineMeter - length (stressPattern w1)) lineMeter
-  let line2Remainder = take (length lineMeter - length (stressPattern w2)) lineMeter
-  let line1Possibilities = countLines dictionary line1Remainder
-  let line2Possibilities = countLines dictionary line2Remainder
-  let (line1Index, g3) = randomR (0, line1Possibilities-1) g2
-  let (line2Index, g4) = randomR (0, line2Possibilities-1) g3
+  let possibleLines = lineChoiceSeq dictionary lineMeter
+  let line1Choice = possibleLines !! (length lineMeter - length (stressPattern w1))
+  let line2Choice = possibleLines !! (length lineMeter - length (stressPattern w2))
 
-  let line1 = constructLine dictionary line1Remainder line1Index ++ [w1]
-  let line2 = constructLine dictionary line2Remainder line2Index ++ [w2]
+  let (line1Start, g3) = chooseRandomly line1Choice g2
+  let (line2Start, g4) = chooseRandomly line2Choice g3
+  let line1 = line1Start ++ [w1]
+  let line2 = line2Start ++ [w2]
 
   -- Show the passrhyme:
   putStrLn $ ""
@@ -68,7 +67,7 @@ sampleAndPrintRhymes dictionary lineMeter k n g = do
 
   -- And print out some surprise stats:
   let rhymeBits = bits (countChoices rhymeChoice)
-  let restBits = bits line1Possibilities + bits line2Possibilities
+  let restBits = bits (countChoices line1Choice) + bits (countChoices line2Choice)
   let totalBits = rhymeBits + restBits
   putStrLn $ ""
   putStrLn $ "Selecting the rhyme gave us " ++ show rhymeBits ++ " bits of surprise."
