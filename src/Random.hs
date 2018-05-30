@@ -13,7 +13,7 @@ import System.Random (RandomGen(next, genRange, split))
 ----- Randomness utils:
 
 -- A wrapper which exposes some random bytes we've pre-generated as a RandomGen instance.
-newtype RandomBytes = RandomBytes [Word8]
+newtype RandomBytes = RandomBytes [Word8] deriving (Eq, Ord, Show)
 
 instance RandomGen RandomBytes where
   next (RandomBytes (x:xs)) = (fromIntegral x, RandomBytes xs)

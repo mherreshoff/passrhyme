@@ -2,10 +2,13 @@ module Main where
 
 import Data.List (intercalate)
 import Data.Word
-import Lib
-import Random
 import qualified Data.Set as Set
 import System.Random
+
+import Choice
+  ( chooseRandomly, countChoices, listToChoice, choicePair, choiceUnion )
+import Lib
+import Random
 
 
 -- The number of random bytes to be generated with paranoidRandomBytes.
@@ -38,13 +41,14 @@ showLine ps = intercalate " " (map word ps)
 
 -- Given a dictionary, a line meter (stress pattern) and a random number generator, sample some
 -- passrhymes and print them (including entropy information.)
-sampleAndPrintRhymes :: (RandomGen g) => [Pronunciation] -> [Bool] -> Int -> Int -> g -> IO g
+sampleAndPrintRhymes :: (Show g, RandomGen g) => [Pronunciation] -> [Bool] -> Int -> Int -> g -> IO g
 sampleAndPrintRhymes dictionary lineMeter k n g = do
   -- First we pick the rhyming words:
   let endWords = [p | p <- dictionary, stressPattern p `suffixOf` lineMeter]
     -- Words that match our meter if they're at the end of the line.
-  let rhymePairs = pairsFromSets (rhymeSets endWords)
-  let ((w1, w2), g2) = choose rhymePairs g
+  let rhymeSetsEW = rhymeSets endWords
+  let rhymeChoice = choiceUnion $ map (choicePair . listToChoice) rhymeSetsEW
+  let ((w1, w2), g2) = chooseRandomly rhymeChoice g
   -- Then we generate the rest of the couplet
   let line1Remainder = take (length lineMeter - length (stressPattern w1)) lineMeter
   let line2Remainder = take (length lineMeter - length (stressPattern w2)) lineMeter
@@ -63,7 +67,7 @@ sampleAndPrintRhymes dictionary lineMeter k n g = do
   putStrLn $ showLine line2
 
   -- And print out some surprise stats:
-  let rhymeBits = bits (length rhymePairs)
+  let rhymeBits = bits (countChoices rhymeChoice)
   let restBits = bits line1Possibilities + bits line2Possibilities
   let totalBits = rhymeBits + restBits
   putStrLn $ ""
