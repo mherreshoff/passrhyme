@@ -1,8 +1,6 @@
 {-# LANGUAGE RankNTypes #-}
 module Lib
-  ( prefixOf
-  , suffixOf
-  , tailsWhere
+  ( tailsWhere
   , Pronunciation(Pronunciation)
   , word, phonemes
   , readDictionaryFile
@@ -20,22 +18,12 @@ import Control.Arrow
 import qualified Data.Map as Map
 import Data.Char (toLower, isNumber)
 import Data.Map (Map)
-import Data.List (inits, tails)
+import Data.List (isSuffixOf, inits, tails)
 import System.Random
 
 import Choice
 
 ----- Generic Utility Code:
-
--- Checks whether the second list starts with the first list.
-prefixOf :: (Eq a) => [a] -> [a] -> Bool
-prefixOf [] _ = True
-prefixOf _ [] = False
-prefixOf (x:xs) (y:ys) = x == y && prefixOf xs ys
-
--- Checks whether the second list ends with the first list.
-suffixOf :: (Eq a) => [a] -> [a] -> Bool
-suffixOf xs ys = prefixOf (reverse xs) (reverse ys)
 
 -- All non-empty suffixes of a list.
 nonEmptyTails :: [a] -> [[a]]
@@ -124,4 +112,4 @@ coupletChoice dictionary pattern = result where
   rhymePairs = [(p1, p2) | rs <- rhymes, p1 <- rs, p2 <- rs, p1 /= p2]
   rhymes = rhymeSets endWords
   endWords :: [Pronunciation]
-  endWords = [p | p <- dictionary, stressPattern p `suffixOf` pattern]
+  endWords = [p | p <- dictionary, stressPattern p `isSuffixOf` pattern]
