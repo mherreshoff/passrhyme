@@ -70,9 +70,12 @@ main = do
     -- passphrases made mostly of one syllable words otherwise, and those are harder to memorize.)
   lineMeter <- readStressPattern
     -- Ask the user for a stress pattern.
+
+  let couplets = showCouplet <$> coupletChoice dictionary lineMeter
+    -- Build a Choice object over all the allowed rhyming couplets.
+
   g <- paranoidRandomBytes kMaxRandomBytes
     -- Generate a random byte-string to sample passrhymes.
-  let couplets = showCouplet <$> coupletChoice dictionary lineMeter
 
   _ <- sampleAndPrint couplets 1 5 g
     -- Print five examples.
@@ -80,5 +83,6 @@ main = do
   putStrLn $ ""
   putStrLn $ "Total entropy: " ++ show (choiceBits couplets) ++ " bits."
   putStrLn $ ""
+    -- Print out the entropy so the user knows the password strength.
 
   return ()
