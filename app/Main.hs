@@ -6,7 +6,9 @@ import qualified Data.Set as Set
 import System.Random
 
 import Choice
-  ( chooseRandomly, countChoices, choiceBits, listToChoice, choiceUnion )
+  ( Choice
+  , chooseRandomly
+  , choiceBits )
 import Lib
 import Random
 
@@ -35,28 +37,23 @@ readStressPattern = do
 showLine :: [Pronunciation] -> String
 showLine ps = intercalate " " (map word ps)
 
--- Given a dictionary, a line meter (stress pattern) and a random number generator, sample some
--- passrhymes and print them (including entropy information.)
-sampleAndPrintRhymes :: (Show g, RandomGen g) => [Pronunciation] -> [Bool] -> Int -> Int -> g -> IO g
-sampleAndPrintRhymes dictionary lineMeter k n g = do
-  let couplets = coupletChoice dictionary lineMeter
+showCouplet :: ([Pronunciation], [Pronunciation]) -> String
+showCouplet (l1,l2) = showLine l1 ++ "\n" ++ showLine l2
 
-  let ((line1, line2), g') = chooseRandomly couplets g
 
-  -- Show the passrhyme:
+-- Given a Choice String, draw some samples and print them.
+sampleAndPrint :: (Show g, RandomGen g) => Choice String -> Int -> Int -> g -> IO g
+sampleAndPrint c k n g = do
+  let (s, g') = chooseRandomly c g
+
   putStrLn $ ""
   putStrLn $ "Sample #" ++ show k ++ ":"
-  putStrLn $ showLine line1
-  putStrLn $ showLine line2
-
-  putStrLn $ ""
-  putStrLn $ "Total surprise: " ++ show (choiceBits couplets) ++ " bits."
-  putStrLn $ ""
+  putStrLn $ s
 
   -- And maybe do it again.
   g'' <- if (k >= n)
     then return g'
-    else sampleAndPrintRhymes dictionary lineMeter (k+1) n g'
+    else sampleAndPrint c (k+1) n g'
 
   return g''
 
@@ -75,6 +72,13 @@ main = do
     -- Ask the user for a stress pattern.
   g <- paranoidRandomBytes kMaxRandomBytes
     -- Generate a random byte-string to sample passrhymes.
-  _ <- sampleAndPrintRhymes dictionary lineMeter 1 5 g
+  let couplets = showCouplet <$> coupletChoice dictionary lineMeter
+
+  _ <- sampleAndPrint couplets 1 5 g
     -- Print five examples.
+
+  putStrLn $ ""
+  putStrLn $ "Total entropy: " ++ show (choiceBits couplets) ++ " bits."
+  putStrLn $ ""
+
   return ()
