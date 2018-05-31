@@ -1,7 +1,6 @@
 {-# LANGUAGE RankNTypes #-}
 module Lib
-  ( tailsWhere
-  , Pronunciation(Pronunciation)
+  ( Pronunciation(Pronunciation)
   , word, phonemes
   , readDictionaryFile
   , parseDictionaryFile
@@ -24,16 +23,6 @@ import System.Random
 import Choice
 
 ----- Generic Utility Code:
-
--- All non-empty suffixes of a list.
-nonEmptyTails :: [a] -> [[a]]
-nonEmptyTails = tailsWhere (const True)
-
--- All (non-empty) suffixes of a list where the first element satisfies the given predicate.
-tailsWhere :: (a -> Bool) -> [a] -> [[a]]
-tailsWhere pred = iter where
-  iter [] = []
-  iter t@(x:xs) = (if pred x then (t:) else id) $ iter xs
 
 -- Turns a list of values into a map indexed by the given function.
 keyBy :: (Ord k) => (v -> k) -> [v] -> Map k [v]
@@ -77,7 +66,9 @@ isStressedVowel s = c == '1' || c == '2' where c = last s
 -- Returns all phonemes in the Pronunciation starting from the last stressed vowel.
 rhymeStem :: Pronunciation -> [String]
 rhymeStem p = if null t then phonemes p else last t where
- t = tailsWhere isStressedVowel $ phonemes p
+ t = filter startsWithStress $ tails $ phonemes p
+ startsWithStress [] = False
+ startsWithStress (x:_) = isStressedVowel x
 
 -- Groups Pronunciations by their 'rhymeStem's.
 rhymeSets :: [Pronunciation] -> [[Pronunciation]]
@@ -91,7 +82,7 @@ lineChoiceSeq dictionary pattern = resultList where
   wordChoiceByStressMap = listToChoice <$> keyBy stressPattern dictionary
   wordChoice :: [Bool] -> Choice Pronunciation
   wordChoice sp = maybe mempty id (Map.lookup sp wordChoiceByStressMap)
-  transitions n = nonEmptyTails $ take n pattern
+  transitions n = filter (/=[]) $ tails $ take n pattern
   resultList = fmap result [0..length pattern]
   result :: Int -> Choice [Pronunciation]
   result 0 = listToChoice [[]]
