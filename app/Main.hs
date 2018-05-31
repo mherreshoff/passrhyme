@@ -43,21 +43,9 @@ showLine ps = intercalate " " (map word ps)
 -- passrhymes and print them (including entropy information.)
 sampleAndPrintRhymes :: (Show g, RandomGen g) => [Pronunciation] -> [Bool] -> Int -> Int -> g -> IO g
 sampleAndPrintRhymes dictionary lineMeter k n g = do
-  -- First we pick the rhyming words:
-  let endWords = [p | p <- dictionary, stressPattern p `suffixOf` lineMeter]
-    -- Words that match our meter if they're at the end of the line.
-  let rhymeSetsEW = rhymeSets endWords
-  let rhymeChoice = choiceUnion $ map (choicePair . listToChoice) rhymeSetsEW
-  let ((w1, w2), g2) = chooseRandomly rhymeChoice g
-  -- Then we generate the rest of the couplet
-  let possibleLines = lineChoiceSeq dictionary lineMeter
-  let line1Choice = possibleLines !! (length lineMeter - length (stressPattern w1))
-  let line2Choice = possibleLines !! (length lineMeter - length (stressPattern w2))
+  let couplets = coupletChoice dictionary lineMeter
 
-  let (line1Start, g3) = chooseRandomly line1Choice g2
-  let (line2Start, g4) = chooseRandomly line2Choice g3
-  let line1 = line1Start ++ [w1]
-  let line2 = line2Start ++ [w2]
+  let ((line1, line2), g') = chooseRandomly couplets g
 
   -- Show the passrhyme:
   putStrLn $ ""
@@ -65,22 +53,17 @@ sampleAndPrintRhymes dictionary lineMeter k n g = do
   putStrLn $ showLine line1
   putStrLn $ showLine line2
 
-  -- And print out some surprise stats:
-  let rhymeBits = bits (countChoices rhymeChoice)
-  let restBits = bits (countChoices line1Choice) + bits (countChoices line2Choice)
-  let totalBits = rhymeBits + restBits
+  let totalBits = bits (countChoices couplets)
   putStrLn $ ""
-  putStrLn $ "Selecting the rhyme gave us " ++ show rhymeBits ++ " bits of surprise."
-  putStrLn $ "Given those rhyme words, the remainder had " ++ show restBits ++ " bits of surprise."
-  putStrLn $ "For a total surprise of: " ++ show totalBits ++ " bits."
+  putStrLn $ "Total surprise: " ++ show totalBits ++ " bits."
   putStrLn $ ""
 
   -- And maybe do it again.
-  g5 <- if (k >= n)
-    then return g4
-    else sampleAndPrintRhymes dictionary lineMeter (k+1) n g4
+  g'' <- if (k >= n)
+    then return g'
+    else sampleAndPrintRhymes dictionary lineMeter (k+1) n g'
 
-  return g5
+  return g''
 
 main :: IO ()
 main = do 
