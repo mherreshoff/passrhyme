@@ -6,7 +6,6 @@ module Choice
   , choiceToList
   , choiceUnion
   , choiceProduct
-  , choicePair
   ) where
 import Data.List ( genericIndex, genericLength )
 import System.Random
@@ -70,11 +69,3 @@ choiceUnion xs = Choice (sum $ map countChoices xs) (locate xs) where
 choiceProduct :: Choice a -> Choice b -> Choice (a, b)
 choiceProduct x y = Choice (countChoices x * countChoices y) locate where
   locate idx = (choose x xi, choose y yi) where (xi, yi) = divMod idx (countChoices y)
-
--- chooses among *distinct* pairs
-choicePair :: Choice a -> Choice (a, a)
-choicePair x = Choice (c * (c - 1)) locate where
-  c = countChoices x
-  locate idx = (choose x idx1, choose x idx2) where
-    (idx1', idx2) = divMod idx c
-    idx1 = (if idx1' >= idx2 then (+1) else id) idx1'

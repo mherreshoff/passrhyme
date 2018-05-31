@@ -6,7 +6,7 @@ import qualified Data.Set as Set
 import System.Random
 
 import Choice
-  ( chooseRandomly, countChoices, choiceBits, listToChoice, choicePair, choiceUnion )
+  ( chooseRandomly, countChoices, choiceBits, listToChoice, choiceUnion )
 import Lib
 import Random
 
