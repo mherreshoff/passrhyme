@@ -6,7 +6,7 @@ import qualified Data.Set as Set
 import System.Random
 
 import Choice
-  ( chooseRandomly, countChoices, listToChoice, choicePair, choiceUnion )
+  ( chooseRandomly, countChoices, choiceBits, listToChoice, choicePair, choiceUnion )
 import Lib
 import Random
 
@@ -31,10 +31,6 @@ readStressPattern = do
   else if null line then return iambicTetrameter
   else return (map (=='-') line)
 
--- Computes the log base 2 of an integer.
-bits :: (Integral n) => n -> Double
-bits = logBase 2.0 . fromIntegral
-
 -- How to print a line (list of words) to the screen.
 showLine :: [Pronunciation] -> String
 showLine ps = intercalate " " (map word ps)
@@ -53,9 +49,8 @@ sampleAndPrintRhymes dictionary lineMeter k n g = do
   putStrLn $ showLine line1
   putStrLn $ showLine line2
 
-  let totalBits = bits (countChoices couplets)
   putStrLn $ ""
-  putStrLn $ "Total surprise: " ++ show totalBits ++ " bits."
+  putStrLn $ "Total surprise: " ++ show (choiceBits couplets) ++ " bits."
   putStrLn $ ""
 
   -- And maybe do it again.

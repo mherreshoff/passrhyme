@@ -1,6 +1,6 @@
 {-# LANGUAGE TypeFamilies #-}
 module Choice
-  ( Choice, countChoices, choose
+  ( Choice, countChoices, choiceBits, choose
   , chooseRandomly
   , listToChoice
   , choiceToList
@@ -22,6 +22,9 @@ data Choice a = Choice Integer (Integer -> a)
 ----- Accessors:
 countChoices :: Choice a -> Integer
 countChoices (Choice n _) = n
+
+choiceBits :: Choice a -> Double
+choiceBits = logBase 2.0 . fromIntegral . countChoices
 
 choose :: Choice a -> Integer -> a
 choose (Choice _ c) idx = c idx
