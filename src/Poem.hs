@@ -44,14 +44,15 @@ lineChoiceSeq dictionary pattern = resultList where
 
 coupletChoice :: [Pronunciation] -> [Bool] -> Choice ([Pronunciation], [Pronunciation])
 coupletChoice dictionary pattern = result where
-  result = mconcat [buildCouplet <$> s!!(n-c1) <*> s!!(n-c2) <*> cp
-    | ((c1, c2), cp) <- Map.assocs pairsByCounts]
+  result = mconcat [buildCouplet <$> s!!r1 <*> s!!r2 <*> cp
+    | ((r1, r2), cp) <- Map.assocs pairChoiceByRemainders]
   buildCouplet l1 l2 (r1, r2) = (l1 ++ [r1], l2 ++ [r2])
-  n = length pattern
   s = lineChoiceSeq dictionary pattern
-  pairsByCounts = listToChoice <$> keyBy (syllableCount *** syllableCount) rhymePairs
-  syllableCount = length . stressPattern
-  rhymePairs = [(p1, p2) | rs <- rhymes, p1 <- rs, p2 <- rs, p1 /= p2]
+  pairChoiceByRemainders =
+    listToChoice <$> keyBy (remainder *** remainder) rhymePairs
+  remainder = (n-) . length . stressPattern
+  n = length pattern
+  rhymePairs = [(x, y) | r <- rhymes, x <- r, y <- r, x /= y]
   rhymes = rhymeSets endWords
   endWords :: [Pronunciation]
   endWords = [p | p <- dictionary, stressPattern p `isSuffixOf` pattern]
