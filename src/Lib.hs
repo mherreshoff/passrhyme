@@ -1,12 +1,6 @@
 {-# LANGUAGE RankNTypes #-}
 module Lib
   ( Pronunciation(Pronunciation)
-  , word, phonemes
-  , readDictionaryFile
-  , parseDictionaryFile
-  , nonAlternate
-  , stressPattern
-  , rhymeStem
   , rhymeSets
   , lineChoice
   , lineChoiceSeq
@@ -15,65 +9,23 @@ module Lib
 
 import Control.Arrow
 import qualified Data.Map as Map
-import Data.Char (toLower, isNumber)
 import Data.Map (Map)
 import Data.List (isSuffixOf, inits, tails)
 import System.Random
 
 import Choice
-
------ Generic Utility Code:
+import Pronunciation
 
 -- Turns a list of values into a map indexed by the given function.
 keyBy :: (Ord k) => (v -> k) -> [v] -> Map k [v]
 keyBy f vs = Map.fromListWith (++) $ map (f &&& (\v -> [v])) vs
 
------ CMU Dictionary Utils
-
--- An entry from the CMU Pronuncing Dictionary.
-data Pronunciation = Pronunciation
-  { word :: String
-  , phonemes :: [String] }
-  deriving (Eq, Ord, Show)
-
--- Given a file name, produces a list of Pronunciation entries.
-readDictionaryFile :: FilePath -> IO [Pronunciation]
-readDictionaryFile f = do 
-  s <- readFile f
-  return $ parseDictionaryFile s
-
--- Turns the contents of the CMU Pronouncing Dictionary into a list of Pronunciation entries.
-parseDictionaryFile :: String -> [Pronunciation]
-parseDictionaryFile x = map parseEntry $ filter notComment $ lines x where
-  notComment s = not (null s) && head s /= ';'
-  parseEntry line = Pronunciation (map toLower word) phonemes where
-    (word:phonemes) = words line
-
--- Weeds out alternate pronunciations (eg. "foo(1)").
-nonAlternate :: Pronunciation -> Bool
-nonAlternate p = last (word p) /= ')'
-
--- Reads the numeric tags the CMU dictionary puts on its vowels and returns a list (one bool per syllable) with True indicating
--- a stressed syllable and False indicating an unstressed syllable.
-stressPattern :: Pronunciation -> [Bool]
-stressPattern p = pattern where
-  pattern = map (/='0') $ filter isNumber $ map last $ phonemes p
-
--- Checks whether a string is a stressed vowel.
-isStressedVowel :: String -> Bool
-isStressedVowel s = c == '1' || c == '2' where c = last s
-
--- Returns all phonemes in the Pronunciation starting from the last stressed vowel.
-rhymeStem :: Pronunciation -> [String]
-rhymeStem p = if null t then phonemes p else last t where
- t = filter startsWithStress $ tails $ phonemes p
- startsWithStress [] = False
- startsWithStress (x:_) = isStressedVowel x
-
 -- Groups Pronunciations by their 'rhymeStem's.
 rhymeSets :: [Pronunciation] -> [[Pronunciation]]
 rhymeSets = Map.elems . keyBy rhymeStem
 
+-- Given a dictionary and a line meter make a choice object over all lines
+-- conforming to the meter.
 lineChoice :: [Pronunciation] -> [Bool] -> Choice [Pronunciation]
 lineChoice dictionary pattern = last $ lineChoiceSeq dictionary pattern
 

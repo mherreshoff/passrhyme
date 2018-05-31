@@ -10,6 +10,7 @@ import Choice
   , chooseRandomly
   , choiceBits )
 import Lib
+import Pronunciation
 import Random
 
 
