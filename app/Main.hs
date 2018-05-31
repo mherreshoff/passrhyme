@@ -9,7 +9,7 @@ import Choice
   ( Choice
   , chooseRandomly
   , choiceBits )
-import Lib
+import Poem
 import Pronunciation
 import Random
 

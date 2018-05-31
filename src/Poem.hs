@@ -1,7 +1,6 @@
 {-# LANGUAGE RankNTypes #-}
-module Lib
-  ( Pronunciation(Pronunciation)
-  , rhymeSets
+module Poem
+  ( rhymeSets
   , lineChoice
   , lineChoiceSeq
   , coupletChoice
